@@ -27,6 +27,9 @@ class SpaceInvaders:
             self._check_events()
             self.ship.update()
             self._update_screen()
+                
+            # Make the most recently drawn screen visible.
+            pygame.display.flip()
             self.clock.tick(60)
 
     def _check_events(self):
@@ -51,11 +54,8 @@ class SpaceInvaders:
         # Redraw te screen during each pass through the loop.
         self.screen.fill(self.settings.bg_color)
         self.ship.blitme()
-            
-        # Make the most recently drawn screen visible.
-        pygame.display.flip()
 
 if __name__ == '__main__':
-    # Make a game instance, and run the game.
+# Make a game instance, and run the game.
     ai = SpaceInvaders()
     ai.run_game()
