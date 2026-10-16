@@ -4,6 +4,7 @@ import pygame
 
 from settings import Settings
 from ship import Ship
+from bullet import Bullet
 
 class SpaceInvaders:
     """Overall class to manage game assets and behavior."""
@@ -20,16 +21,22 @@ class SpaceInvaders:
         pygame.display.set_caption("Space Invaders")
 
         self.ship = Ship(self)
+        self.bullets = pygame.sprite.Group()
     
     def run_game(self):
         """Start the main loop for game."""
         while True:
             self._check_events()
             self.ship.update()
+            self.bullets.update()
+
+            # Get rid of bullets that have disappeared.
+            for bullets in self.bullets.copy():
+                if bullets.rect.bottom <=0:
+                    self.bullets.remove(bullets)
+            print(len(self.bullets))
+
             self._update_screen()
-                
-            # Make the most recently drawn screen visible.
-            pygame.display.flip()
             self.clock.tick(60)
 
     def _check_events(self):
@@ -50,17 +57,29 @@ class SpaceInvaders:
             self.ship.moving_left = True
         elif event.key == pygame.K_q:
             sys.exit()
+        elif event.key == pygame.K_SPACE:
+            self._fire_bullet()
+
     def _check_keyup_events(self, event):
         if event.key == pygame.K_RIGHT:
                 self.ship.moving_right = False
         elif event.key == pygame.K_LEFT:
                 self.ship.moving_left = False
 
+    def _fire_bullet(self):
+        """Create a new bullet and add it to the bullets group."""
+        new_bullet = Bullet(self)
+        self.bullets.add(new_bullet)
+
     def _update_screen(self):
         """Update images on the screen, and flip to the new screen."""
         # Redraw te screen during each pass through the loop.
         self.screen.fill(self.settings.bg_color)
+        for bullet in self.bullets.sprites():
+            bullet.draw_bullet()
         self.ship.blitme()
+
+        pygame.display.flip()
 
 if __name__ == '__main__':
 # Make a game instance, and run the game.
