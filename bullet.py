@@ -1,6 +1,8 @@
 import pygame
 from pygame.sprite import Sprite
 
+from settings import Settings
+
 class Bullet(Sprite):
     """A class to manage bullets fired from the ship."""
 
